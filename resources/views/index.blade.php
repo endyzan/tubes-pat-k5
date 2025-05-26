@@ -5,7 +5,8 @@
         <nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
             <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
                 <a href="#" class="flex items-center">
-                    <img src="./images/logo.svg" class="h-6 mr-3 sm:h-9" alt="Landwind Logo" />
+                    <img src="{{ asset('template_files/component_image/logo.svg') }}" class="h-6 mr-3 sm:h-9"
+                        alt="Landwind Logo" />
                     <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Landwind</span>
                 </a>
                 <div class="flex items-center lg:order-2">
@@ -130,7 +131,7 @@
                 </div>
             </div>
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
-                <img src="./images/hero.png" alt="hero image">
+                <img src="{{ asset('template_files/component_image/hero.png') }}" alt="hero image">
             </div>
         </div>
     </section>
@@ -319,13 +320,13 @@
                     <p class="mb-8 font-light lg:text-xl">Deliver great service experiences fast - without the complexity
                         of traditional ITSM solutions.</p>
                 </div>
-                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex" src="./images/feature-1.png"
-                    alt="dashboard feature image">
+                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex"
+                    src="{{ asset('template_files/component_image/feature-1.png') }}" alt="dashboard feature image">
             </div>
             <!-- Row -->
             <div class="items-center gap-8 lg:grid lg:grid-cols-2 xl:gap-16">
-                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex" src="./images/feature-2.png"
-                    alt="feature image 2">
+                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex"
+                    src="{{ asset('template_files/component_image/feature-2.png') }}" alt="feature image 2">
                 <div class="text-gray-500 sm:text-lg dark:text-gray-400">
                     <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">We invest in the
                         world’s potential</h2>
