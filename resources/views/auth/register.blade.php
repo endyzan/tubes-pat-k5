@@ -1,0 +1,12 @@
+@include('auth.partials.head')
+
+
+<body>
+    @include('partials.navbar')
+    @include('auth.partials.form_register')
+
+    {{-- flowbite script js --}}
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+
+@include('partials.footer')
