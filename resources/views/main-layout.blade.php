@@ -12,17 +12,16 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
     <!-- Styles / Scripts -->
-    @include('partials.vite')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
+
 <body>
+    @yield('content')
 
-    <body>
-        @yield('content')
-
-        {{-- flowbite script js --}}
-        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-    </body>
-    @include('partials.footer')
+    {{-- flowbite script js --}}
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+@include('partials.footer')
 
 </html>

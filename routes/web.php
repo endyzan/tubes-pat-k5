@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 
 // This route is for testing purposes only
-// Route::get('/', [Crypto::class, 'index']);
+Route::get('/admin', function () {
+    return view('admin.index');
+});
 
 
 Route::get('/', function () {
