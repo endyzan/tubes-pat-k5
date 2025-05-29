@@ -3,6 +3,10 @@
 
 <body>
     @include('partials.navbar')
+
+    {{-- alert --}}
+    @include('partials.autentication-alert')
+
     @include('auth.partials.form_register')
 
     {{-- flowbite script js --}}
