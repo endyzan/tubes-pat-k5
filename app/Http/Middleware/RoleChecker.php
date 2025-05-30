@@ -20,9 +20,10 @@ class RoleChecker
 
         if (!$user || !isset($user['token'])) {
             return redirect()->route('login')->withErrors(['login' => 'Anda Belum Login. Silakan Login Terlebih Dahulu.']);
-        } elseif ($user['role'] != 'admin' || $user['role'] != 'volunteer') {
+        } elseif ($user['role'] != 'admin' && $user['role'] != 'volunteer') {
             abort(403, 'Unauthorized access. You do not have permission to view this page.');
         }
+
         return $next($request);
     }
 }
