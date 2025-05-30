@@ -50,7 +50,6 @@ class Authentication extends Controller
         }
 
         $role = $request->filled('role') ? $request->role : 'user';
-        $role = 'admin'; // Set role volunteer ke user
 
         $response = Http::post($this->baseUrl . '/auth/register', [
             'email' => $request->email,
@@ -136,6 +135,46 @@ class Authentication extends Controller
         Session::forget('user');
         return redirect()->route('login')->with('success', 'Anda telah logout.');
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+        ]);
+
+        try {
+            $response = Http::post("{$this->baseUrl}/auth/reset-password", [
+                'email' => $request->input('email'),
+            ]);
+
+
+            if ($response->successful()) {
+                return back()->with('success', $response->json('message') ?? 'Link reset password telah dikirim ke email Anda.');
+            }
+
+            if ($response->status() === 400) {
+                $errorMessage = $response->json('message') ?? 'Terjadi kesalahan validasi.';
+                $errorDetails = $response->json('errors') ?? [];
+
+                return back()->withErrors([
+                    'forgot_password' => $errorMessage,
+                    'details' => implode(', ', $errorDetails),
+                ]);
+            }
+
+            return back()->withErrors([
+                'forgot_password' => 'Gagal mengirim permintaan reset password. Silakan coba lagi nanti.',
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+            return back()->withErrors([
+                'forgot_password' => 'Terjadi kesalahan saat menghubungi server.',
+            ]);
+        }
+    }
 }
 
 
@@ -146,9 +185,9 @@ class Authentication extends Controller
 
 2. POST /auth/login – Login akun ✓
 
-3. GET /auth/verify-token – Verifikasi token
+3. GET /auth/verify-token – Verifikasi token ✓ AS MIDDLEWARE
 
-4. POST /auth/forgot-password – Lupa password
+4. POST /auth/reset-password – Lupa password
 
 5. PATCH /auth/forgot-password/verify?code={unique code} – Verifikasi lupa password
 

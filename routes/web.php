@@ -15,7 +15,7 @@ use App\Http\Controllers\TestingPurpose\Crypto;
 // Admin or Volunteer Dashboard
 Route::get('/admin', function () {
     return view('admin.index');
-})->name('admin-dashboard');
+})->name('admin-dashboard')->middleware('role-checker');;
 
 // Home Page
 Route::get('/', function () {
@@ -44,3 +44,32 @@ Route::post('/login/submit', [Authentication::class, 'login'])->name('login.subm
 
 // Logout
 Route::get('/logout', [Authentication::class, 'logout'])->name('logout');
+
+// Forgot Password
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('forgot-password');
+
+// Submit Forgot Password
+Route::post('/forgot-password/submit', [Authentication::class, 'forgotPassword'])->name('forgot-password.submit');
+
+/* ================================================================================= /*
+ * ============================== User Management Routes =========================== //
+ * ================================================================================= */
+
+// Profile
+Route::get('/profile', function () {
+    return view('settings');
+})->name('profile');
+
+
+/* Tambahkan middleware untuk memastikan token valid sebelum mengakses rute berikutnya */
+/* Tambah line code ini pada belakang route untuk menambahkan verifikasi token */
+
+// ->middleware('verify-token');
+
+/* Contoh: Route::get('/some-route', [SomeController::class, 'someMethod'])->middleware('verify-token'); */
+
+
+/* Other Middleware Routes */
+// ->middleware('role-checker');  => Middleware untuk memeriksa peran pengguna (admin atau volunteer) sebelum mengakses rute tertentu, jika tidak sesuai terhadap hak akses maka tidak bisa akses.

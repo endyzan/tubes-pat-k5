@@ -12,3 +12,10 @@ full name : volunteer donasi
 email : volunteer@example.com
 telp : 081234567893
 password : volunteer1234
+
+
+-------- Email Aseli ----------
+full name : Ahmad Ar-rosyid Hidayatullah
+email : hexagonalmateur@gmail.com
+telp : 081234567891
+password : ahmad1234
