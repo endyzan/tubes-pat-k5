@@ -15,7 +15,7 @@ use App\Http\Controllers\TestingPurpose\Crypto;
 // Admin or Volunteer Dashboard
 Route::get('/admin', function () {
     return view('admin.index');
-})->name('admin-dashboard');
+})->name('admin-dashboard')->middleware('role-checker');;
 
 // Home Page
 Route::get('/', function () {
