@@ -175,6 +175,58 @@ class Authentication extends Controller
             ]);
         }
     }
+
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'nullable|email|max:100',
+            'nama_lengkap' => 'nullable|string|max:100',
+            'telp' => 'nullable|string|max:15',
+
+            // Tidak boleh mengupdate ini
+            'password' => 'prohibited',
+            'role' => 'prohibited',
+        ], [
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email maksimal 100 karakter.',
+            'nama_lengkap.string' => 'Nama lengkap harus berupa teks.',
+            'nama_lengkap.max' => 'Nama lengkap maksimal 100 karakter.',
+            'telp.string' => 'Nomor telepon harus berupa teks.',
+            'telp.max' => 'Nomor telepon maksimal 15 karakter.',
+            'password.prohibited' => 'Password tidak boleh diubah dari sini.',
+            'role.prohibited' => 'Role tidak boleh diubah.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Ambil token user (asumsi disimpan di session atau melalui Auth::user())
+        $token = session('token'); // atau sesuaikan sumber token kamu
+
+        if (!$token) {
+            return back()->withErrors(['update' => 'Token akses diperlukan.']);
+        }
+
+        try {
+            $response = Http::withToken($token)
+                ->patch($this->baseUrl . '/auth/profile/update', $validator->validated());
+
+            if ($response->successful()) {
+                return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+            }
+
+            if ($response->status() === 400 || $response->status() === 401) {
+                return back()->withErrors([
+                    'update' => $response->json('message') ?? 'Gagal memperbarui profil.',
+                ])->withInput();
+            }
+
+            return back()->withErrors(['update' => 'Terjadi kesalahan saat memperbarui profil.'])->withInput();
+        } catch (\Exception $e) {
+            return back()->withErrors(['update' => 'Kesalahan server: ' . $e->getMessage()])->withInput();
+        }
+    }
 }
 
 
@@ -189,8 +241,9 @@ class Authentication extends Controller
 
 4. POST /auth/reset-password – Lupa password
 
-5. PATCH /auth/forgot-password/verify?code={unique code} – Verifikasi lupa password
+5. PATCH /auth/reset-password/verify/{Token} – Verifikasi lupa password
 
-6. POST /auth/riwayat-token – Menambah riwayat token baru
+6. POST /auth/riwayat-token – Mendapatkan Riwayat penggunaan Token
 
+7. Update Profile User /auth/profile/update
 */

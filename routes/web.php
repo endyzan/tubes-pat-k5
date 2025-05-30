@@ -62,6 +62,9 @@ Route::get('/profile', function () {
     return view('settings');
 })->name('profile');
 
+// Update Profile
+Route::patch('/profile/update', [Authentication::class, 'updateProfile'])->name('profile.update')->middleware('verify-token');
+
 
 /* Tambahkan middleware untuk memastikan token valid sebelum mengakses rute berikutnya */
 /* Tambah line code ini pada belakang route untuk menambahkan verifikasi token */
