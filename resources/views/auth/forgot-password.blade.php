@@ -7,7 +7,7 @@
     {{-- alert --}}
     @include('partials.autentication-alert')
 
-    @include('auth.partials.form_register')
+    @include('auth.partials.form_forgot-password')
 
     {{-- flowbite script js --}}
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>

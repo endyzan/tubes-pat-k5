@@ -1,0 +1,21 @@
+full name : user donasi
+email : user@example.com
+telp : 081234567890
+password : user1234
+
+full name : admin donasi
+email : admin@example.com
+telp : 081234567899
+password : admin1234
+
+full name : volunteer donasi
+email : volunteer@example.com
+telp : 081234567893
+password : volunteer1234
+
+
+-------- Email Aseli ----------
+full name : Ahmad Ar-rosyid Hidayatullah
+email : hexagonalmateur@gmail.com
+telp : 081234567891
+password : ahmad1234

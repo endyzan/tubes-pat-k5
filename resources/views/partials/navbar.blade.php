@@ -1,7 +1,7 @@
 <header class="fixed w-full">
     <nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
         <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
-            <a href="#" class="flex items-center">
+            <a href="{{ route('home') }}" class="flex items-center">
                 <img src="{{ asset('template_files/component_image/logo.svg') }}" class="h-6 mr-3 sm:h-9"
                     alt="Landwind Logo" />
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Landwind</span>
@@ -12,11 +12,33 @@
                         data-icon="octicon-star" data-show-count="true"
                         aria-label="Star themesberg/landwind on GitHub">Star</a>
                 </div> --}}
-                <a href="{{ route('login') }}"
-                    class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Log
-                    in</a>
-                <a href="{{ route('register') }}"
-                    class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">Register</a>
+
+                {{-- Authentication Links --}}
+                @if (!Session::has('user'))
+                    <a href="{{ route('login') }}"
+                        class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Log
+                        in</a>
+                    <a href="{{ route('register') }}"
+                        class="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">Register</a>
+                @else
+                    <a href="{{ route('profile') }}"
+                        class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">
+                        Profile
+                    </a>
+                    <a href="{{ route('logout') }}"
+                        class="flex justify-between text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">
+
+                        <svg class="w-[20px] h-[20px] text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                            viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.6" d="M18 18V6h-5v12h5Zm0 0h2M4 18h2.5m3.5-5.5V12M6 6l7-2v16l-7-2V6Z" />
+                        </svg>
+                        <span class="ml-1">Logout</span>
+                    </a>
+                @endif
+                {{-- End of Authentication Links --}}
+
                 <button data-collapse-toggle="mobile-menu-2" type="button"
                     class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     aria-controls="mobile-menu-2" aria-expanded="false">
@@ -37,7 +59,7 @@
             <div class="items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
                 <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                     <li>
-                        <a href="/"
+                        <a href="{{ route('home') }}"
                             class="block py-2 pl-3 pr-4 text-white bg-purple-700 rounded lg:bg-transparent lg:text-purple-700 lg:p-0 dark:text-white"
                             aria-current="page">Home</a>
                     </li>
