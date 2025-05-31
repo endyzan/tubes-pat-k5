@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 //Web Routes
 
 
+Route::get('/user', function () {
+    return view('user.index');
+});
 
 // This route is for testing purposes only
 Route::get('/admin', function () {

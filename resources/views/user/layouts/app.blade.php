@@ -17,10 +17,10 @@
 
 <body class="min-h-screen">
 
-    @include('admin.layouts.navbar')
+    @include('user.layouts.navbar')
     <div class="flex overflow-hidden bg-gray-100 dark:bg-gray-900">
-        @include('admin.layouts.sidebar')
-        <div class="lg:max-w-[85vw] lg:ml-auto">
+        @include('user.layouts.sidebar')
+        <div class="flex-1">
             {{-- content --}}
             @yield('content')
         </div>
