@@ -176,6 +176,57 @@ class Authentication extends Controller
         }
     }
 
+    public function showNewPasswordForm($verify_code)
+    {
+        return view('auth.submit-forgot-password', compact('verify_code'));
+    }
+
+    public function submitNewPassword(Request $request, $token)
+    {
+        $request->validate([
+            'password' => 'required|string|max:32',
+            'confirm-password' => 'required|same:password',
+        ], [
+            'password.required' => 'Password wajib diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.max' => 'Password maksimal 32 karakter.',
+
+            'confirm-password.required' => 'Konfirmasi password wajib diisi.',
+            'confirm-password.same' => 'Konfirmasi password tidak cocok dengan password.',
+        ]);
+
+        try {
+            $response = Http::patch("{$this->baseUrl}/auth/forgot-password/submit/new-password/{$token}", [
+                'password' => $request->input('password'),
+            ]);
+
+            if ($response->successful()) {
+                return redirect()->route('login')->with('success', $response->json('message') ?? 'Berhasil mengganti password.');
+            }
+
+            if ($response->status() === 400) {
+                $errorMessage = $response->json('message') ?? 'Terjadi kesalahan validasi.';
+                $errorDetails = $response->json('errors') ?? [];
+
+                return back()->withErrors([
+                    'reset_password' => $errorMessage,
+                    'details' => implode(', ', $errorDetails),
+                ]);
+            }
+
+            return back()->withErrors([
+                'reset_password' => 'Gagal mengganti password. Silakan coba lagi nanti.',
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+            return back()->withErrors([
+                'reset_password' => 'Terjadi kesalahan saat menghubungi server.',
+            ]);
+        }
+    }
+
+
+
     public function updateProfile(Request $request)
     {
         $validator = Validator::make($request->all(), [

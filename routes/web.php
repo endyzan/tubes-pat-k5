@@ -53,6 +53,12 @@ Route::get('/forgot-password', function () {
 // Submit Forgot Password
 Route::post('/forgot-password/submit', [Authentication::class, 'forgotPassword'])->name('forgot-password.submit');
 
+// Show New Forgotten Password
+Route::get('forgot-password/submit/new-password/{verify_code}', [Authentication::class, 'showNewPasswordForm'])->name('password.reset.form');
+
+// Confirm New Password
+Route::patch('forgot-password/submit/confirm-new-password/{token}', [Authentication::class, 'submitNewPassword'])->name('confirm-password.reset.form');
+
 /* ================================================================================= /*
  * ============================== User Management Routes =========================== //
  * ================================================================================= */
