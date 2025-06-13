@@ -344,7 +344,7 @@ class Authentication extends Controller
 
 5. PATCH /auth/reset-password/verify/{Token} – Verifikasi lupa password ✓
 
-6. POST /auth/riwayat-token – Mendapatkan Riwayat penggunaan Token
+6. GET /auth/riwayat-token – Mendapatkan Riwayat penggunaan Token
 
 7. Update Profile User /auth/profile/update ✓
 
