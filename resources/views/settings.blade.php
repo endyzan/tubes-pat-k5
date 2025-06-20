@@ -14,6 +14,10 @@
     <div class="bg-gray-100 dark:bg-gray-900 m-0 pt-4 pl-6">
         @include('partials.settings.navbar')
     </div>
+    <div class="bg-gray-100 dark:bg-gray-900 pt-2">
+        {{-- alert --}}
+        @include('partials.settings.error-alert')
+    </div>
     <div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
         <div class="w-full max-w-2xl px-5">
             <div
@@ -33,6 +37,9 @@
                             <input type="text" name="nama_lengkap" id="nama_lengkap" disabled
                                 class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 value="{{ Session::get('user.nama_lengkap') }}">
+                            @error('nama_lengkap')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Email -->
@@ -43,6 +50,10 @@
                             <input type="email" name="email" id="email" disabled
                                 class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 value="{{ Session::get('user.email') }}">
+                            @error('email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+
                         </div>
 
                         <!-- Telepon -->
@@ -53,13 +64,17 @@
                             <input type="text" name="telp" id="telp" disabled
                                 class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 value="{{ Session::get('user.telp') }}">
+                            @error('telp')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+
                         </div>
                     </div>
 
                     <!-- Tombol Edit/Simpan & Batal -->
                     <div class="mt-4 flex gap-2">
                         <button type="button" id="toggleEdit"
-                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
+                            class="px-4 py-2 text-sm font-medium text-white bg-purple-800 hover:bg-purple-600">
                             Edit
                         </button>
                         <button type="button" id="cancelEdit"
@@ -72,48 +87,57 @@
             <!-- Form Password -->
             <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <h3 class="mb-4 text-xl font-semibold dark:text-white">Password information</h3>
-                <form action="#">
+
+                <form method="POST" action="{{ route('profile.update.password') }}">
+                    @csrf
+                    @method('PATCH')
+
                     <div class="grid grid-cols-1 gap-6">
-                        <!-- Current Password -->
+
+                        <!-- Password Lama -->
                         <div>
-                            <label for="current-password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current
-                                password</label>
-                            <input type="text" name="current-password" id="current-password"
+                            <label for="old_password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Current password
+                            </label>
+                            <input type="password" name="old_password" id="old_password"
                                 class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                value="••••••••" required>
+                                placeholder="••••" required>
+                            @error('old_password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- New Password -->
+                        <!-- Password Baru -->
                         <div>
-                            <label for="password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New
-                                password</label>
-                            <input type="password" id="password"
+                            <label for="new_password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                New password
+                            </label>
+                            <input type="password" name="new_password" id="new_password"
                                 class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                placeholder="••••••••" required>
+                                placeholder="••••" required>
+                            @error('new_password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Confirm Password -->
-                        <div>
-                            <label for="confirm-password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
-                                password</label>
-                            <input type="text" name="confirm-password" id="confirm-password"
-                                class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                placeholder="••••••••" required>
-                        </div>
+                        <!-- Error Umum -->
+                        @error('update_password')
+                            <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
 
-                        <!-- Save Button -->
+                        <!-- Tombol Simpan -->
                         <div>
                             <button type="submit"
-                                class="w-full py-2.5 px-5 text-sm font-medium text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                class="w-full py-2.5 px-5 text-sm font-medium text-white bg-purple-800 hover:bg-purple-600 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                 Save New Password
                             </button>
                         </div>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 
@@ -123,6 +147,8 @@
         const toggleButton = document.getElementById("toggleEdit");
         const cancelButton = document.getElementById("cancelEdit");
         const inputs = document.querySelectorAll("#userForm input");
+        const form = document.getElementById("userForm");
+
 
         // Simpan nilai awal input
         const originalValues = {};
@@ -140,7 +166,8 @@
                 toggleButton.textContent = "Simpan";
                 cancelButton.classList.remove("hidden");
             } else {
-                // Di sini bisa ditambahkan logika simpan (form.submit atau fetch/AJAX)
+                form.submit();
+
                 inputs.forEach(input => input.disabled = true);
                 toggleButton.textContent = "Edit";
                 cancelButton.classList.add("hidden");

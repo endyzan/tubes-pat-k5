@@ -235,10 +235,6 @@ class Authentication extends Controller
             'email' => 'nullable|email|max:100',
             'nama_lengkap' => 'nullable|string|max:100',
             'telp' => 'nullable|string|max:15',
-
-            // Tidak boleh mengupdate ini
-            'password' => 'prohibited',
-            'role' => 'prohibited',
         ], [
             'email.email' => 'Format email tidak valid.',
             'email.max' => 'Email maksimal 100 karakter.',
@@ -246,16 +242,13 @@ class Authentication extends Controller
             'nama_lengkap.max' => 'Nama lengkap maksimal 100 karakter.',
             'telp.string' => 'Nomor telepon harus berupa teks.',
             'telp.max' => 'Nomor telepon maksimal 15 karakter.',
-            'password.prohibited' => 'Password tidak boleh diubah dari sini.',
-            'role.prohibited' => 'Role tidak boleh diubah.',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Ambil token user (asumsi disimpan di session atau melalui Auth::user())
-        $token = session('token'); // atau sesuaikan sumber token kamu
+        $token = Session::get('user.token');
 
         if (!$token) {
             return back()->withErrors(['update' => 'Token akses diperlukan.']);
@@ -266,6 +259,13 @@ class Authentication extends Controller
                 ->patch($this->baseUrl . '/auth/profile/update', $validator->validated());
 
             if ($response->successful()) {
+                $updatedUser = $response->json('data'); // asumsi API kirim data user dalam key 'data'
+
+                if ($updatedUser) {
+                    // Simpan kembali data user ke session
+                    Session::put('user', $updatedUser);
+                }
+
                 return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
             }
 
@@ -280,6 +280,56 @@ class Authentication extends Controller
             return back()->withErrors(['update' => 'Kesalahan server: ' . $e->getMessage()])->withInput();
         }
     }
+
+    public function updatePassword(Request $request)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string|min:6',
+            'new_password' => 'required|string|min:6|different:old_password',
+        ], [
+            'old_password.required' => 'Password lama harus diisi.',
+            'new_password.required' => 'Password baru harus diisi.',
+            'new_password.different' => 'Password baru harus berbeda dari yang lama.',
+            'new_password.min' => 'Password minimal 6 karakter.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Ambil token dari session
+        $token = Session::get('user.token');
+
+        if (!$token) {
+            return back()->withErrors(['update_password' => 'Token akses diperlukan.'])->withInput();
+        }
+
+        try {
+            $response = Http::withToken($token)
+                ->patch($this->baseUrl . '/auth/profile/update-password', $validator->validated());
+
+            if ($response->successful()) {
+                return redirect()->back()->with('success', 'Password berhasil diperbarui.');
+            }
+
+            // Tangani berbagai error status code dari API
+            $status = $response->status();
+            $responseBody = $response->json();
+
+            if ($status === 400 || $status === 401 || $status === 404) {
+                return back()->withErrors([
+                    'update_password' => $responseBody['message'] ?? 'Gagal memperbarui password.',
+                ])->withInput();
+            }
+
+            return back()->withErrors(['update_password' => 'Terjadi kesalahan tidak diketahui.'])->withInput();
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'update_password' => 'Kesalahan server: ' . $e->getMessage(),
+            ])->withInput();
+        }
+    }
 }
 
 
@@ -292,11 +342,13 @@ class Authentication extends Controller
 
 3. GET /auth/verify-token – Verifikasi token ✓ AS MIDDLEWARE
 
-4. POST /auth/reset-password – Lupa password
+4. POST /auth/reset-password – Lupa password ✓
 
-5. PATCH /auth/reset-password/verify/{Token} – Verifikasi lupa password
+5. PATCH /auth/reset-password/verify/{Token} – Verifikasi lupa password ✓
 
-6. POST /auth/riwayat-token – Mendapatkan Riwayat penggunaan Token
+6. GET /auth/riwayat-token – Mendapatkan Riwayat penggunaan Token
 
-7. Update Profile User /auth/profile/update
+7. Update Profile User /auth/profile/update ✓
+
+8. Update profile user password /auth/profile/update-password ✓
 */

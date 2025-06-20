@@ -88,14 +88,20 @@
         <div class="text-center">
             <a href="#"
                 class="flex items-center justify-center mb-5 text-2xl font-semibold text-gray-900 dark:text-white">
-                <img src="{{ asset('template_files/component_image/logo.svg') }}" class="h-6 mr-3 sm:h-9"
-                    alt="Landwind Logo" />
-                Landwind
+                <img src="{{ asset('image/logo/donation_system.png') }}" class="h-6 mr-3 sm:h-9" alt="Websites Logo" />
+                Sistem Donasi
             </a>
-            <span class="block text-sm text-center text-gray-500 dark:text-gray-400">© 2021-2022 Landwind™. All
+            {{-- <span class="block text-sm text-center text-gray-500 dark:text-gray-400">© 2021-2022 Landwind™. All
                 Rights Reserved. Built with <a href="https://flowbite.com"
                     class="text-purple-600 hover:underline dark:text-purple-500">Flowbite</a> and <a
                     href="https://tailwindcss.com" class="text-purple-600 hover:underline dark:text-purple-500">Tailwind
+                    CSS</a>.
+            </span> --}}
+            <span class="block text-sm text-center text-gray-500 dark:text-gray-400">© 2025 . Integrated Application
+                Programming. made by Group 5. Built with
+                <a href="https://flowbite.com" class="text-purple-600 hover:underline dark:text-purple-500">Flowbite</a>
+                and <a href="https://tailwindcss.com"
+                    class="text-purple-600 hover:underline dark:text-purple-500">Tailwind
                     CSS</a>.
             </span>
             <ul class="flex justify-center mt-5 space-x-5">
