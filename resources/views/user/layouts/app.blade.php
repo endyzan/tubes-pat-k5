@@ -30,6 +30,13 @@
 
     {{-- Sidebar toggle script --}}
     <script>
+        @if (session()->has('user'))
+            localStorage.setItem("token", "{{ session('user')['token'] }}");
+        @endif
+
+
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.getElementById('toggleSidebarMobile');
             const sidebar = document.getElementById('sidebar');

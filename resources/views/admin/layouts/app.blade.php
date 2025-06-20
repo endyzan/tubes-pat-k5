@@ -10,9 +10,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 
     <!-- Styles / Scripts -->
     @include('partials.vite')
+    
 </head>
 
 <body class="min-h-screen bg-gray-900 text-white">
@@ -30,6 +33,35 @@
 
     {{-- Sidebar toggle script --}}
     <script>
+        @if (session()->has('user'))
+            localStorage.setItem("token", "{{ session('user')['token'] }}");
+        @endif
+        fetch('/api-proxy/donasi/status/accepted')
+            .then(res => res.json())
+            .then(result => {
+                console.log(result);
+
+                // Jika result adalah array langsung
+                if (Array.isArray(result)) {
+                if (result.length === 0) {
+                    document.getElementById('donasi-list').innerHTML = 'Belum ada donasi.';
+                } else {
+                    let html = '';
+                    result.forEach(donasi => {
+                    html += `<li>${donasi.nama_donatur} - Rp${donasi.jumlah}</li>`;
+                    });
+                    document.getElementById('donasi-list').innerHTML = html;
+                }
+                } else {
+                document.getElementById('donasi-list').innerHTML = 'Data donasi tidak valid';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('donasi-list').innerHTML = 'Gagal memuat data';
+            });
+
+
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.getElementById('toggleSidebarMobile');
             const sidebar = document.getElementById('sidebar');

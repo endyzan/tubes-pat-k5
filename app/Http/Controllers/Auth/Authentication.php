@@ -110,6 +110,8 @@ class Authentication extends Controller
                 'role' => $userData['role'],
                 'token' => $userData['token'],
             ]);
+            Session::flash('userid', $userData['id']);
+
 
             $redirectPage = $userData['role'] === 'user' ? 'home' : 'admin-dashboard';
 
