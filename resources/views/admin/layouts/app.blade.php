@@ -15,14 +15,14 @@
     @include('partials.vite')
 </head>
 
-<body class="min-h-screen">
-
+<body class="min-h-screen bg-gray-900 text-white">
     @include('admin.layouts.navbar')
-    <div class="flex overflow-hidden bg-gray-100 dark:bg-gray-900">
+
+    <div class="flex bg-gray-900">
         @include('admin.layouts.sidebar')
-        <div class="lg:max-w-[85vw] lg:ml-auto">
-            {{-- content --}}
-            @yield('content')
+
+        <div class="flex-1 lg:ml-64 p-4 pt-20">
+        @yield('content')
         </div>
     </div>
     {{-- flowbite script js --}}

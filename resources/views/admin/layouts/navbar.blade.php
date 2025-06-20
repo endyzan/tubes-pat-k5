@@ -20,7 +20,7 @@
                 <a href="#" class="flex ml-2 md:mr-24">
                     {{-- <img src="/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" /> --}}
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Open Donasi</span>
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Admin Donasi</span>
                 </a>
                 <form action="#" method="GET" class="hidden lg:block lg:pl-3.5">
                     <label for="topbar-search" class="sr-only">Search</label>
@@ -40,12 +40,6 @@
                 </form>
             </div>
             <div class="flex items-center">
-                <div class="hidden mr-3 -mb-1 sm:block">
-                    <a class="github-button" href="https://github.com/themesberg/flowbite-admin-dashboard"
-                        data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-star"
-                        data-size="large" data-show-count="true"
-                        aria-label="Star themesberg/flowbite-admin-dashboard on GitHub">Star</a>
-                </div>
                 <!-- Search mobile -->
                 <button id="toggleSidebarMobileSearch" type="button"
                     class="p-2 text-gray-500 rounded-lg lg:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">

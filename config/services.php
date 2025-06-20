@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+
+    'donation_api' => [
+        'url' => env('DONATION_API_URL'),
+    ],
+
 ];
