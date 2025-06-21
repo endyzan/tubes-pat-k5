@@ -134,6 +134,11 @@
                                 Save New Password
                             </button>
                         </div>
+                        <div class="flex justify-end items-end p-0 m-0 w-full"> <a
+                                href="{{ route('forgot-password') }}"
+                                class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 dark:text-white">Forgot
+                                password?</a>
+                        </div>
                     </div>
                 </form>
             </div>

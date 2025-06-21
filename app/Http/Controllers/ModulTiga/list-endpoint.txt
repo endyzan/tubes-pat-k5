@@ -1,0 +1,36 @@
+Base Url : https://kuliah2025.my.id/modul.3_distributions/
+
+Endpoint :
+
+1. Mendaftarkan penerima donasi
+
+POST /recipients.php             OK
+
+2. Mendapatkan Daftar penerima donasi
+
+GET /recipients.php              OK
+GET /recipients.php?id=id
+
+3. Mengupdate daftar penerima donasi
+
+PUT /recipients.php?id=id        OK
+
+4. Menonaktifkan penerima donasi
+
+DELETE /recipients.php?id=id     OK
+
+5. Mengaktifkan kembali penerima donasi
+
+PATCH /recipients.php?id=id      ?? How To Get The List ??
+
+6. Mendistribusikan Donasi
+
+POST /distributions.php
+
+7. Mengambil Daftar Distribusi
+
+GET /distributions.php?donasi_id=50
+
+8. Mengupdate Status Distribusi
+
+PUT /distributions.php
