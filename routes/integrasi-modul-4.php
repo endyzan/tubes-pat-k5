@@ -13,7 +13,7 @@ use App\Http\Controllers\KegiatanController;
  * ============================== integrasi modul 4 ================================ //
  * ================================================================================= */
 
-Route::prefix('kegiatan')->name('kegiatan.')->middleware(['role-checker'])->group(function () {
+Route::prefix('kegiatan')->name('kegiatan.')->middleware(['volunteer-level'])->group(function () {
     Route::get('/', [KegiatanController::class, 'index'])->name('index');
     Route::get('/create', [KegiatanController::class, 'create'])->name('create');
     Route::post('/', [KegiatanController::class, 'store'])->name('store');

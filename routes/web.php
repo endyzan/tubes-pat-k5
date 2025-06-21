@@ -33,19 +33,20 @@ use App\Http\Controllers\KegiatanController;
 
 // =============================== Landing Page Route ============================ //
 
-Route::get('/user', function () {
-    return view('user.index');
-});
-
-// Admin or Volunteer Dashboard
-Route::get('/admin', function () {
-    return view('admin.index');
-})->name('admin-dashboard')->middleware();
-
 // Home Page
 Route::get('/', function () {
     return view('index');
 })->name('home');
+
+// User Dashboard
+Route::get('/user', function () {
+    return view('user.index');
+})->name('user-dashboard')->middleware('user-level');
+
+// Admin or Volunteer Dashboard
+Route::get('/admin', function () {
+    return view('admin.index');
+})->name('admin-dashboard')->middleware('volunteer-level');
 
 // ============================== Authentication Routes =========================== //
 include 'authentication.php';
