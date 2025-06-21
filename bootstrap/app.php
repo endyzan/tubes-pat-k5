@@ -14,8 +14,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('verify-token', [
             \App\Http\Middleware\EnsureTokenIsValid::class,
         ]);
-        $middleware->appendToGroup('role-checker', [
-            \App\Http\Middleware\RoleChecker::class,
+        $middleware->appendToGroup('admin-level', [
+            \App\Http\Middleware\EnsureTokenIsValid::class,
+            \App\Http\Middleware\AdminLevel::class,
+        ]);
+        $middleware->appendToGroup('volunteer-level', [
+            \App\Http\Middleware\EnsureTokenIsValid::class,
+            \App\Http\Middleware\VolunteerLevel::class,
+        ]);
+        $middleware->appendToGroup('user-level', [
+            \App\Http\Middleware\EnsureTokenIsValid::class,
+            \App\Http\Middleware\UserLevel::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
