@@ -2,6 +2,10 @@
 <section id="about" class="bg-gray-50 dark:bg-gray-900 py-16">
     <div class="max-w-screen-xl mx-auto px-4 lg:px-6">
         <div class="text-center mb-12">
+            <br>
+            <br>
+            <br>
+            <br>
             <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Tentang Kami</h2>
             <p class="mt-4 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Kami adalah platform donasi terpercaya yang menghubungkan kebaikan hati Anda dengan mereka yang

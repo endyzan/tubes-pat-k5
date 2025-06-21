@@ -9,7 +9,7 @@
                 besar untuk perubahan nyata.
             </p>
             <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                <a href="#donasi"
+                <a href="{{ route('user-dashboard') }}"
                     class="inline-flex items-center justify-center w-full px-5 py-3 text-sm font-medium text-center text-white bg-blue-700 rounded-lg sm:w-auto hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
                     Donasi Sekarang
                 </a>

@@ -23,6 +23,7 @@ class EnsureTokenIsValid
         $user = Session::get('user');
 
         if (!$user || !isset($user['token'])) {
+            Session::forget('user');
             return redirect()->route('login')->withErrors(['login' => 'Anda Belum Login. Silakan Login Terlebih Dahulu.']);
         }
 

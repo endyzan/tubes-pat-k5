@@ -79,7 +79,7 @@
 
 
 @if (session('error'))
-    <div class="flex items-center p-4 mb-0 pt-18 text-sm text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400"
+    <div class="flex items-center p-4 mb-0 pt-18 w-screen text-sm text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
         role="alert">
         <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             fill="currentColor" viewBox="0 0 20 20">
@@ -88,7 +88,7 @@
         </svg>
         <span class="sr-only">Info</span>
         <div>
-            <span class="font-medium">Success!</span> {{ session('error') }}
+            <span class="font-medium">Warning!</span> {{ session('error') }}
         </div>
     </div>
 @endif

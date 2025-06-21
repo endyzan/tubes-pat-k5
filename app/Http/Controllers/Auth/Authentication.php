@@ -262,6 +262,9 @@ class Authentication extends Controller
                 $updatedUser = $response->json('data'); // asumsi API kirim data user dalam key 'data'
 
                 if ($updatedUser) {
+                    // Tambahkan token ke data user yang diperbarui
+                    $updatedUser['token'] = $token;
+
                     // Simpan kembali data user ke session
                     Session::put('user', $updatedUser);
                 }
