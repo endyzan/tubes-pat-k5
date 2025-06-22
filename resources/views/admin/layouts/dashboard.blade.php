@@ -83,12 +83,8 @@
         </ul>
         <div id="fullWidthTabContent" class="border-t border-gray-200 dark:border-gray-600">
             <div class="hidden pt-4" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-              <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                 <ul id="donasi-terhimpun" role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                  <!-- Donasi accepted akan muncul di sini -->
-                </ul>
-  
-              </ul>
+                    </ul>
             </div>
             <div class="hidden pt-4" id="about" role="tabpanel" aria-labelledby="about-tab">
               <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
