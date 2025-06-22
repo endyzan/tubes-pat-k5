@@ -484,23 +484,13 @@ document.addEventListener("DOMContentLoaded", function () {
             // Render to the main table (if it exists) - this section remains largely the same
             data.forEach(item => {
                 const row = `
-                    <tr>
+                        <tr>
                         <td class="px-6 py-4">${item.id}</td>
                         <td class="px-6 py-4">${item.userid || '-'}</td>
                         <td class="px-6 py-4">${item.type || '-'}</td>
                         <td class="px-6 py-4">${item.qty || 0} ${item.unit || ''}</td>
                         <td class="px-6 py-4">${item.keterangan || '-'}</td>
-                        <td class="px-6 py-4">
-                            <select onchange="updateDonationStatus(${item.id}, this.value)"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="need_validation" ${item.status === 'need_validation' ? 'selected' : ''}>Need Validation</option>
-                                <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="success" ${item.status === 'success' ? 'selected' : ''}>Success</option>
-                                <option value="accepted" ${item.status === 'accepted' ? 'selected' : ''}>Accepted</option>
-                                <option value="rejected" ${item.status === 'rejected' ? 'selected' : ''}>Rejected</option>
-                                <option value="taken" ${item.status === 'taken' ? 'selected' : ''}>Taken</option>
-                            </select>
-                        </td>
+                        <td class="px-6 py-4">${item.status_validasi || item.status || '-'}</td>
                         <td class="px-6 py-4">${new Date(item.created_at).toLocaleString()}</td>
                         <td class="px-6 py-4">
                             <button onclick="editDonasi(${item.id}, '${item.userid}', '${item.type}', ${item.qty}, '${item.unit}', '${item.keterangan}')"
@@ -510,6 +500,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             <button onclick="hapusDonasi(${item.id})" title="Hapus Donasi" class="text-red-600 hover:text-red-800 cursor-pointer">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                        </td>
+                        <td class="px-6 py-4">
+                            <select onchange="updateDonationStatus(${item.id}, this.value)"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option value="">Pilih Status</option> <option value="need_validation" ${item.status_validasi === 'need_validation' ? 'selected' : ''}>Need Validation</option>
+                                <option value="pending" ${item.status_validasi === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="accepted" ${item.status_validasi === 'accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value="rejected" ${item.status_validasi === 'rejected' ? 'selected' : ''}>Rejected</option>
+                                <option value="taken" ${item.status_validasi === 'taken' ? 'selected' : ''}>Taken</option>
+                                <option value="success" ${item.status_validasi === 'success' ? 'selected' : ''}>Success</option>
+                            </select>
                         </td>
                     </tr>
                 `;

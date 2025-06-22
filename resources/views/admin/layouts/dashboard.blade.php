@@ -344,6 +344,7 @@
                   <th class="px-6 py-3">Status</th>
                   <th class="px-6 py-3">Tanggal</th>
                   <th class="px-6 py-3">Aksi</th>
+                  <th class="px-6 py-3">Validasi</th> </tr>
               </tr>
           </thead>
           <tbody>
