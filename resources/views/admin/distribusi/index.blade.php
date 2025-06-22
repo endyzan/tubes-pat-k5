@@ -42,15 +42,19 @@
                                 {{ $d['keterangan'] }}
                             </td>
                             <td class="px-6 py-4">
-                                <span
-                                    class="px-2 py-1 rounded text-white text-xs
-                                    @if ($d['status_validasi'] === 'success') bg-green-600
-                                    @elseif($d['status_validasi'] === 'pending') bg-yellow-500
-                                    @elseif($d['status_validasi'] === 'need_validation') bg-blue-500
-                                    @elseif($d['status_validasi'] === 'failed') bg-red-600
-                                    @elseif($d['status_validasi'] === 'taken') bg-gray-500
-                                    @else bg-slate-400 @endif">
-                                    {{ ucfirst(str_replace('_', ' ', $d['status_validasi'])) }}
+                                @php
+                                    $status = $d['status_validasi'] ?? 'None';
+                                    $statusClass = match ($status) {
+                                        'success' => 'bg-green-600',
+                                        'pending' => 'bg-yellow-500',
+                                        'need_validation' => 'bg-blue-500',
+                                        'failed' => 'bg-red-600',
+                                        'taken' => 'bg-gray-500',
+                                        default => 'bg-slate-400',
+                                    };
+                                @endphp
+                                <span class="px-2 py-1 rounded text-white text-xs {{ $statusClass }}">
+                                    {{ ucfirst(str_replace('_', ' ', $status)) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">

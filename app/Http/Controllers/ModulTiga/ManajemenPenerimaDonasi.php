@@ -11,19 +11,44 @@ class ManajemenPenerimaDonasi extends Controller
 {
     private $baseUrl = 'https://kuliah2025.my.id/modul.3_distributions/';
 
-    public function index()
+    public function index(Request $request)
     {
-        // 2.1. Mendapatkan Daftar penerima donasi
-        // GET /recipients.php
-
         $token = session('user.token');
+
+        $page = $request->query('page', 1);
+        $limit = $request->query('limit', 10);
+        $statusFilter = $request->query('status');
+
         $response = Http::withHeaders(['Authorization' => $token])
             ->withoutVerifying()
             ->get($this->baseUrl . 'recipients.php');
 
-        $recipients = $response->json();
-        return view('admin.recipients.index', compact('recipients'));
+        $allRecipients = $response->json();
+
+        // Filter berdasarkan status jika ada
+        if ($statusFilter === 'aktif') {
+            $allRecipients = array_filter($allRecipients, fn($r) => $r['is_active'] == true);
+        } elseif ($statusFilter === 'nonaktif') {
+            $allRecipients = array_filter($allRecipients, fn($r) => $r['is_active'] == false);
+        }
+
+        $totalItems = count($allRecipients);
+        $totalPages = ceil($totalItems / $limit);
+        $offset = ($page - 1) * $limit;
+        $recipients = array_slice($allRecipients, $offset, $limit);
+
+        $pagination = [
+            'current_page' => (int) $page,
+            'total_pages' => $totalPages,
+            'total_items' => $totalItems,
+            'limit' => $limit,
+            'status' => $statusFilter,
+        ];
+
+        return view('admin.recipients.index', compact('recipients', 'pagination'));
     }
+
+
 
     public function store(Request $request)
     {
