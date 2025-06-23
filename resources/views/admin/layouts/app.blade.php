@@ -18,10 +18,10 @@
     
 </head>
 
-<body class="min-h-screen bg-gray-900 text-white">
+<body class="min-h-screen bg-white text-gray-900">
     @include('admin.layouts.navbar')
 
-    <div class="flex bg-gray-900">
+    <div class="flex bg-white">
         @include('admin.layouts.sidebar')
 
         <div class="flex-1 lg:ml-64 p-4 pt-20">

@@ -8,12 +8,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Elemen untuk ringkasan donasi (biasanya di dashboard admin)
     const totalDonasiElement = document.getElementById('total-donasi-masuk');
-    const totalDonasiBarangElement = document.getElementById('total-donasi-barang');
-    const totalDonasiUangElement = document.getElementById('total-donasi-uang');
+    const totalDonasiBarangElement = document.getElementById('total-donasi-barang'); // Sudah ada
+    const totalDonasiUangElement = document.getElementById('total-donasi-uang'); // Sudah ada
+
+    // Perbaikan: Tambahkan elemen untuk menampilkan total donasi barang yang di-accepted/success
+    const totalDonasiBarangAcceptedElement = document.getElementById('total-donasi-barang-accepted'); // ID baru untuk span ini
 
     // Elemen untuk chart (biasanya di dashboard admin)
     const mainChartElement = document.getElementById('main-chart');
-    const chartMonthDisplay = document.querySelector('.p-4 > div > h3');
+    // Perbaikan: Ganti selector untuk chartMonthDisplay agar menargetkan elemen yang berbeda
+    // Asumsi: Anda akan menambahkan <span id="chart-period-display"></span> di HTML Anda
+    const chartMonthDisplay = document.getElementById('chart-period-display'); 
 
     // Elemen untuk dropdown filter tanggal (chart, biasanya di dashboard admin)
     const filterDropdownButton = document.querySelector('[data-dropdown-toggle="weekly-sales-dropdown"]');
@@ -48,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             endDateInput.addEventListener('changeDate', () => { 
                 fetchAndRenderMainChart();
-                updateDropdownDateRangeDisplay(endDateInput.value, endDateInput.value); // Perbaikan: seharusnya endDateInput.value
+                updateDropdownDateRangeDisplay(endDateInput.value, endDateInput.value); 
             });
         }
     }
@@ -69,17 +74,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // Penanganan jika token tidak ditemukan
     if (!token) {
         console.warn('Token tidak ditemukan di localStorage. Beberapa fungsi mungkin tidak berjalan tanpa token.');
-        // Set teks "N/A" atau "Login dibutuhkan" hanya jika elemennya ada
         if (totalDonasiElement) {
             totalDonasiElement.textContent = "N/A (Login dibutuhkan)";
         }
         if (totalDonasiBarangElement) totalDonasiBarangElement.textContent = 'N/A';
         if (totalDonasiUangElement) totalDonasiUangElement.textContent = 'N/A';
-        // Render chart dengan data kosong jika mainChartElement ada
+        if (totalDonasiBarangAcceptedElement) totalDonasiBarangAcceptedElement.textContent = 'N/A'; // Tambahkan ini
         if (mainChartElement) {
             renderMainChart([], [], []); 
         }
-        return; // Hentikan eksekusi lebih lanjut jika tidak ada token
+        return; 
     }
 
     // Event listener untuk dropdown filter tanggal (hanya jika elemen ada)
@@ -117,11 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 const formatDate = (date) => date.toISOString().split('T')[0];
-                // Pastikan startDateInput dan endDateInput ada sebelum mengatur nilainya
                 if (startDateInput) startDateInput.value = formatDate(start);
                 if (endDateInput) endDateInput.value = formatDate(end);
 
-                // Perbarui tampilan dropdown dan render chart
                 updateDropdownDateRangeDisplay(filterText === 'Custom...' ? null : filterText, filterText === 'Custom...' ? null : null);
                 fetchAndRenderMainChart();
             });
@@ -130,25 +132,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fungsi untuk merender chart utama (ApexCharts)
     function renderMainChart(categories, seriesDataUang, seriesDataBarang) {
-        // Hanya render jika elemen chart ada dan ApexCharts terdefinisi
         if (!mainChartElement || typeof ApexCharts === 'undefined') {
             console.error("Elemen chart 'main-chart' atau ApexCharts tidak ditemukan.");
             return;
         }
 
         if (donasiMainChart) {
-            donasiMainChart.destroy(); // Hancurkan chart yang ada sebelum merender ulang
+            donasiMainChart.destroy(); 
         }
 
         const options = {
             series: [{
                 name: "Total Donasi (Uang)",
                 data: seriesDataUang,
-                color: '#4F46E5', // Warna untuk donasi uang (biru indigo)
+                color: '#4F46E5', 
             }, {
                 name: "Total Donasi (Barang)",
                 data: seriesDataBarang,
-                color: '#10B981' // Warna untuk donasi barang (hijau)
+                color: '#10B981' 
             }],
             chart: {
                 type: 'area',
@@ -172,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }, {
                     formatter: function (value) {
-                        return `${value} unit`; // Menampilkan sebagai unit barang
+                        return `${value} unit`; 
                     },
                     title: {
                         formatter: function (seriesName) {
@@ -207,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     show: false
                 }
             },
-            yaxis: [{ // Sumbu Y pertama (untuk uang)
+            yaxis: [{ 
                 title: {
                     text: 'Total Donasi (Uang)',
                     style: {
@@ -233,8 +234,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 axisTicks: {
                     show: true,
                 }
-            }, { // Sumbu Y kedua (untuk barang)
-                opposite: true, // Posisikan di sisi berlawanan
+            }, { 
+                opposite: true, 
                 title: {
                     text: 'Total Donasi (Barang)',
                     style: {
@@ -243,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 labels: {
                     formatter: function (value) {
-                        return value.toFixed(0); // Barang biasanya bilangan bulat
+                        return value.toFixed(0); 
                     },
                     style: {
                         colors: '#6B7280',
@@ -299,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             responsive: [
                 {
-                    breakpoint: 768, // Untuk layar kecil
+                    breakpoint: 768, 
                     options: {
                         chart: {
                             height: 280
@@ -323,7 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const dailyDonationsUang = {};
         const dailyDonationsBarang = {};
 
-        // Hanya jalankan ini jika elemen input tanggal ada
         if (!startDateInput || !endDateInput) {
             console.warn("Elemen input tanggal tidak ditemukan untuk grafik utama.");
             return;
@@ -332,7 +332,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let startDate = startDateInput.value;
         let endDate = endDateInput.value;
 
-        // Set default tanggal jika belum ada
         if (!startDate || !endDate) {
             const today = new Date();
             const thirtyDaysAgo = new Date();
@@ -372,18 +371,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             console.log('API Response data for chart:', donasiData);
 
-            // Filter dan hitung total donasi uang dan barang per hari
             donasiData.forEach(item => {
                 const dateObj = new Date(item.created_at);
                 if (isNaN(dateObj)) {
                     console.warn(`Invalid date format for item.created_at: ${item.created_at}. Skipping this item for chart.`);
                     return;
                 }
-                const date = dateObj.toISOString().split('T')[0]; // Format YYYY-MM-DD
+                const date = dateObj.toISOString().split('T')[0]; 
                 const qty = Number(item.qty);
 
                 if (!isNaN(qty)) {
-                    // Hanya hitung yang berstatus 'accepted' atau 'success' untuk chart
                     const currentStatus = item.status_validasi || item.status;
                     if (currentStatus === 'accepted' || currentStatus === 'success') {
                         if (item.type === 'uang') {
@@ -405,10 +402,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const end = new Date(endDate);
             let current = new Date(start);
 
-            // Isi array kategori dan series data dengan semua tanggal dalam rentang
             while (current <= end) {
                 const dateString = current.toISOString().split('T')[0];
-                categories.push(dateString); // Kategori adalah tanggal
+                categories.push(dateString); 
                 seriesDataUang.push(dailyDonationsUang[dateString] || 0);
                 seriesDataBarang.push(dailyDonationsBarang[dateString] || 0);
                 current.setDate(current.getDate() + 1);
@@ -428,30 +424,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
                 if (categories.length === 1) {
-                    chartMonthDisplay.textContent = `pada tanggal : ${categories[0]}`;
+                    chartMonthDisplay.textContent = `Pada tanggal: ${categories[0]}`;
                 } else if (dateFromChart.getMonth() === lastDateFromChart.getMonth() && dateFromChart.getFullYear() === lastDateFromChart.getFullYear()) {
-                    chartMonthDisplay.textContent = `pada bulan : ${monthNames[dateFromChart.getMonth()]} ${dateFromChart.getFullYear()}`;
+                    chartMonthDisplay.textContent = `Pada bulan: ${monthNames[dateFromChart.getMonth()]} ${dateFromChart.getFullYear()}`;
                 } else {
-                    chartMonthDisplay.textContent = `periode : ${startDate} s/d ${endDate}`;
+                    chartMonthDisplay.textContent = `Periode: ${startDate} s/d ${endDate}`;
                 }
             } else if (chartMonthDisplay) {
-                chartMonthDisplay.textContent = `periode : Tidak ada data`;
+                chartMonthDisplay.textContent = `Periode: Tidak ada data`;
             }
 
         } catch (error) {
             console.error('Error fetching data for main chart:', error);
-            if (mainChartElement) { // Hanya render jika elemen chart ada
-                 renderMainChart([], [], []); // Render chart dengan data kosong jika ada error
+            if (mainChartElement) { 
+                 renderMainChart([], [], []); 
             }
            
             if (chartMonthDisplay) {
-                chartMonthDisplay.textContent = `periode : Error memuat data`;
+                chartMonthDisplay.textContent = `Periode: Error memuat data`;
             }
         }
     }
 
-    // Panggil fetchAndRenderMainChart saat halaman dimuat dengan default 30 hari terakhir
-    // Hanya panggil jika elemen-elemen datepicker chart ada di UI ini
     if (token && startDateInput && endDateInput) {
         const defaultStartDate = new Date();
         defaultStartDate.setDate(defaultStartDate.getDate() - 29);
@@ -476,6 +470,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (totalDonasiBarangElement) totalDonasiBarangElement.textContent = 'Error';
             if (totalDonasiUangElement) totalDonasiUangElement.textContent = 'Error';
+            if (totalDonasiBarangAcceptedElement) totalDonasiBarangAcceptedElement.textContent = 'Error'; 
             if (response.status === 401) {
                 throw new Error('Unauthorized: Token tidak valid atau kadaluarsa. Harap login ulang.');
             }
@@ -485,26 +480,22 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(result => {
         const data = result.data;
-        allDonationsData = data; // Simpan seluruh data yang diambil untuk filtering dan perhitungan
+        allDonationsData = data; 
         const tbody = document.querySelector('#donasi-table tbody'); 
         const donasiTerhimpunList = document.getElementById('donasi-terhimpun'); 
 
         if (tbody) {
             tbody.innerHTML = '';
 
-            // Cek jumlah kolom pada tabel yang aktif saat ini
-            // Tabel Admin memiliki 9 kolom (ID, User ID, Jenis, Jumlah, Keterangan, Status, Tanggal, Aksi, Validasi)
-            // Tabel User memiliki 7 kolom (ID, User ID, Jenis, Jumlah, Keterangan, Status, Tanggal)
-            // Kita akan menentukan colspan berdasarkan keberadaan kolom "Aksi" atau "Validasi"
-            const isUserTable = document.querySelector('#donasi-table th:nth-child(8)') === null; // Jika kolom ke-8 tidak ada, ini tabel user
-            const colspanValue = isUserTable ? 7 : 9; // Sesuaikan colspan
+            const createButtonExists = document.getElementById('createProductModalButton');
+            const isUserTable = createButtonExists ? true : (document.querySelector('#donasi-table th:nth-child(8)') === null); 
+            const colspanValue = isUserTable ? 7 : 9; 
 
             if (!Array.isArray(data) || data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${colspanValue}" class="px-6 py-4 text-center text-gray-500">Tidak ada data donasi.</td></tr>`; 
                 if (donasiTerhimpunList) {
                     donasiTerhimpunList.innerHTML = '<li class="px-6 py-4 text-center text-gray-500">Tidak ada donasi terhimpun.</li>';
                 }
-                // Jika tidak ada data, set semua total ke 0
                 if (totalDonasiElement) {
                     totalDonasiElement.textContent = (0).toLocaleString('id-ID', {
                         style: 'currency',
@@ -513,11 +504,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 if (totalDonasiBarangElement) totalDonasiBarangElement.textContent = '0 unit';
                 if (totalDonasiUangElement) totalDonasiUangElement.textContent = 'Rp 0';
-                updateStatusCounts(data); // Update hitungan status
+                if (totalDonasiBarangAcceptedElement) totalDonasiBarangAcceptedElement.textContent = '0 unit'; 
+                updateStatusCounts(data); 
                 return;
             }
 
-            // Render ke tabel utama (sesuaikan dengan kolom yang ada di HTML)
             data.forEach(item => {
                 let statusColorClass = 'text-gray-900 dark:text-white';
                 const currentStatus = item.status_validasi || item.status; 
@@ -543,12 +534,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         statusColorClass = 'text-yellow-600 font-semibold';
                         break;
                     default:
-                        statusColorClass = 'text-gray-900 dark:text-white'; // Default jika status tidak cocok
+                        statusColorClass = 'text-gray-900 dark:text-white'; 
                         break;
                 }
 
                 let row = `
-                    <tr data-status="${currentStatus}"> <!-- Tambahkan data-status di sini untuk filter -->
+                    <tr data-status="${currentStatus}"> 
                         <td class="px-6 py-4">${item.id}</td>
                         <td class="px-6 py-4">${item.userid || '-'}</td>
                         <td class="px-6 py-4">${item.type || '-'}</td>
@@ -559,7 +550,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         </td>
                         <td class="px-6 py-4">${new Date(item.created_at).toLocaleString()}</td>`;
                 
-                // Tambahkan kolom Aksi dan Validasi hanya jika ini bukan tabel user (admin table)
                 if (!isUserTable) {
                     row += `
                         <td class="px-6 py-4">
@@ -594,9 +584,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // --- RENDER DONASI TERHIMPUN (ACCEPTED/SUCCESS STATUS ONLY) ---
         if (donasiTerhimpunList) {
-            donasiTerhimpunList.innerHTML = ''; // Clear previous content
+            donasiTerhimpunList.innerHTML = ''; 
 
-            // Filter donasi yang berstatus 'accepted' atau 'success' (untuk semua jenis donasi)
             const acceptedDonations = data.filter(item => 
                 (item.status_validasi === 'accepted' || item.status_validasi === 'success')
             );
@@ -658,6 +647,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Ini akan menjumlahkan uang dan barang yang statusnya accepted atau success
         let totalUangAcceptedSummary = 0; 
         let totalBarangAcceptedSummary = 0; 
+        let totalBarangAccepted = 0; // Inisialisasi untuk total donasi barang yang accepted
 
         data.filter(item => {
             const currentStatus = item.status_validasi || item.status;
@@ -667,6 +657,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 totalUangAcceptedSummary += item.qty;
             } else if (item.type === 'barang' && typeof item.qty === 'number' && !isNaN(item.qty)) {
                 totalBarangAcceptedSummary += item.qty;
+                totalBarangAccepted += item.qty; // Hitung juga untuk elemen baru
             }
         });
 
@@ -680,6 +671,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 currency: 'IDR'
             });
         }
+        // Perbaikan: Update elemen baru untuk total donasi barang yang di-accepted
+        if (totalDonasiBarangAcceptedElement) {
+            totalDonasiBarangAcceptedElement.textContent = totalBarangAccepted.toLocaleString('id-ID') + ' unit';
+        }
+
 
         // --- Panggil updateStatusCounts di akhir blok .then ini ---
         updateStatusCounts(data); 
@@ -693,11 +689,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (totalDonasiBarangElement) totalDonasiBarangElement.textContent = 'Error';
         if (totalDonasiUangElement) totalDonasiUangElement.textContent = 'Error';
+        if (totalDonasiBarangAcceptedElement) totalDonasiBarangAcceptedElement.textContent = 'Error'; 
         
         // Juga, tampilkan pesan error di tabel dan daftar terhimpun
         const tbody = document.querySelector('#donasi-table tbody');
-        // Tentukan colspan yang benar untuk pesan error
-        const isUserTable = document.querySelector('#donasi-table th:nth-child(8)') === null;
+        const createButtonExists = document.getElementById('createProductModalButton');
+        const isUserTable = createButtonExists ? true : (document.querySelector('#donasi-table th:nth-child(8)') === null); 
         const colspanValue = isUserTable ? 7 : 9; 
 
         if (tbody) {
@@ -707,7 +704,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (donasiTerhimpunList) {
             donasiTerhimpunList.innerHTML = '<li class="px-6 py-4 text-center text-red-500">Gagal memuat donasi terhimpun.</li>';
         }
-        updateStatusCounts([]); // Update hitungan status dengan data kosong saat error
+        updateStatusCounts([]); 
     });
 
     // --- Modal 'Add Donation' dan Form Handling (Untuk User Role) ---
@@ -720,7 +717,6 @@ document.addEventListener("DOMContentLoaded", function () {
             closable: true,
         });
 
-        // Event listener untuk tombol "Add Donation"
         const createProductModalButton = document.getElementById('createProductModalButton');
         if (createProductModalButton) {
             createProductModalButton.addEventListener('click', () => {
@@ -733,7 +729,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Elemen modal 'createProductModal' tidak ditemukan.");
     }
 
-    // Handle form submission untuk membuat donasi baru
     const createDonationForm = document.getElementById('createDonationForm');
     if (createDonationForm) {
         createDonationForm.addEventListener('submit', function(event) {
@@ -747,7 +742,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 keterangan: document.getElementById('keterangan').value,
             };
 
-            fetch(`/api-proxy/donasi`, { // Endpoint POST untuk membuat donasi
+            fetch(`/api-proxy/donasi`, { 
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -766,8 +761,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (createProductModal) {
                     createProductModal.hide();
                 }
-                createDonationForm.reset(); // Reset form setelah berhasil
-                location.reload(); // Muat ulang halaman untuk menampilkan perubahan
+                createDonationForm.reset(); 
+                location.reload(); 
             })
             .catch(error => {
                 console.error('Error creating donation:', error);
@@ -779,7 +774,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // --- Donation Edit Modal Logic (DIKEMBALIKAN) ---
+    // --- Donation Edit Modal Logic ---
     const editDonationModalElement = document.getElementById('editDonationModal');
     let editDonationModal;
     if (editDonationModalElement) {
@@ -792,7 +787,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Elemen modal 'editDonationModal' tidak ditemukan.");
     }
 
-    // Fungsi untuk membuka modal edit dan mengisi data (DIKEMBALIKAN)
+    // Fungsi untuk membuka modal edit dan mengisi data
     window.editDonasi = function(id, userid, type, qty, unit, keterangan) {
         if (editDonationModalElement) {
             document.getElementById('edit-donasi-id').value = id;
@@ -807,17 +802,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Handle form submission untuk editing donation (DIKEMBALIKAN)
-    // Pastikan Anda memiliki form dengan ID 'editDonationForm' di HTML Anda
     const editDonationForm = document.getElementById('editDonationForm');
     if (editDonationForm) {
         editDonationForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const donasiId = document.getElementById('edit-donasi-id').value;
+            
+            // Perbaikan: Ambil nilai qty dan pastikan itu adalah angka yang valid
+            let qtyValue = parseFloat(document.getElementById('edit-qty').value);
+            if (isNaN(qtyValue)) {
+                qtyValue = 0; // Default ke 0 jika bukan angka yang valid
+                console.warn("Kuantitas (qty) yang dimasukkan bukan angka. Diatur ke 0.");
+            }
+
             const updatedData = {
                 userid: document.getElementById('edit-userid').value,
                 type: document.getElementById('edit-type').value,
-                qty: parseFloat(document.getElementById('edit-qty').value),
+                qty: qtyValue, // Gunakan nilai yang sudah dipastikan angka
                 unit: document.getElementById('edit-unit').value,
                 keterangan: document.getElementById('edit-keterangan').value,
             };
@@ -832,6 +833,13 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(response => {
                 if (!response.ok) {
+                    // Perbaikan: Parse error dari server untuk edit donasi juga
+                    if (response.status === 422) {
+                        return response.json().then(err => {
+                            const errorMessage = err.message || JSON.stringify(err.errors || err);
+                            throw new Error(`Edit Donasi Gagal: ${errorMessage}`);
+                        });
+                    }
                     throw new Error('Failed to update donation: ' + response.statusText);
                 }
                 return response.json();
@@ -841,7 +849,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (editDonationModal) {
                     editDonationModal.hide();
                 }
-                location.reload(); // Muat ulang halaman untuk menampilkan perubahan
+                location.reload(); 
             })
             .catch(error => {
                 console.error('Error updating donation:', error);
@@ -852,9 +860,8 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Form 'editDonationForm' tidak ditemukan.");
     }
 
-    // Handle donation deletion (DIKEMBALIKAN)
+    // Handle donation deletion
     window.hapusDonasi = function(donasiId) {
-        // Ganti alert dengan modal konfirmasi kustom jika Flowbite modal tersedia
         if (!confirm('Apakah Anda yakin ingin menghapus donasi ini?')) {
             return;
         }
@@ -870,7 +877,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error('Failed to delete donation: ' + response.statusText);
             }
             alert('Donasi berhasil dihapus!');
-            location.reload(); // Muat ulang halaman untuk menampilkan perubahan
+            location.reload(); 
         })
         .catch(error => {
             console.error('Error deleting donation:', error);
@@ -878,7 +885,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     };
 
-    // Handle update status donasi (DIKEMBALIKAN)
+    // Handle update status donasi
     window.updateDonationStatus = function(donasiId, newStatus) {
         if (!newStatus) {
             console.log("Tidak ada status yang dipilih, tidak memperbarui.");
@@ -886,12 +893,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let catatanValidasi = '';
-        if (newStatus === 'accepted' || newStatus === 'rejected') {
-            catatanValidasi = prompt(`Masukkan catatan untuk validasi donasi ID ${donasiId} (opsional):`);
-            if (catatanValidasi === null) { // Jika user membatalkan prompt
-                location.reload(); // Reload untuk mengembalikan nilai dropdown
-                return;
-            }
+        // Perbaikan: Prompt catatan validasi jika status berubah ke 'accepted', 'rejected', 'pending', 'taken', 'success', atau 'need_validation'
+        // Memastikan catatan tidak kosong dengan loop
+        if (['accepted', 'rejected', 'pending', 'taken', 'success', 'need_validation'].includes(newStatus)) {
+            let inputCatatan;
+            let firstAttempt = true; 
+            do {
+                // Pesan prompt lebih eksplisit
+                inputCatatan = prompt(`Masukkan catatan untuk validasi donasi ID ${donasiId} (wajib dan tidak boleh kosong untuk status ${newStatus}):${firstAttempt ? '' : '\nCatatan tidak boleh kosong!'}`);
+                if (inputCatatan === null) { // Jika user mengklik Cancel
+                    location.reload(); // Muat ulang untuk mengembalikan nilai dropdown
+                    return;
+                }
+                firstAttempt = false; 
+            } while (inputCatatan.trim() === ''); 
+            catatanValidasi = inputCatatan.trim();
         }
 
         const validatorName = localStorage.getItem('userName') || 'Admin Sistem';
@@ -903,8 +919,8 @@ document.addEventListener("DOMContentLoaded", function () {
             validator: validatorName
         };
 
-        fetch(`/api-proxy/validasi-donasi/admin/validasibyadmin`, { // Pastikan endpoint ini benar
-            method: 'PUT', // Sesuaikan method API Anda (PUT atau PATCH)
+        fetch(`/api-proxy/validasi-donasi/admin/validasibyadmin`, { 
+            method: 'PUT', 
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -917,25 +933,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.status === 401) {
                     throw new Error('Unauthorized: Token tidak valid atau kadaluarsa. Harap login ulang.');
                 }
+                if (response.status === 422) {
+                    return response.json().then(err => {
+                        const errorMessage = err.message || JSON.stringify(err.errors || err);
+                        throw new Error(`Validasi Gagal: ${errorMessage}`);
+                    });
+                }
                 throw new Error('Gagal memperbarui status donasi: ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
             alert('Status donasi berhasil diperbarui!');
-            location.reload(); // Muat ulang halaman untuk menampilkan perubahan
+            location.reload(); 
         })
         .catch(error => {
             console.error('Error updating donation status:', error);
             alert('Gagal memperbarui status donasi: ' + error.message);
-            location.reload(); // Muat ulang untuk mengembalikan nilai dropdown
+            location.reload(); 
         });
     };
 
 
     // --- Logika Filter Status Tabel ---
-    // Elemen statusCheckboxes dan fungsi filterDonationsByStatus serta updateStatusCounts
-    // akan tetap berfungsi jika elemen HTML terkait ada di halaman
     const statusCheckboxes = document.querySelectorAll('#status-filter-dropdown input[type="checkbox"]');
 
     function filterDonationsByStatus() {
@@ -948,9 +968,9 @@ document.addEventListener("DOMContentLoaded", function () {
         tableRows.forEach(row => {
             const rowStatus = row.dataset.status; 
             if (selectedStatuses.length === 0 || selectedStatuses.includes(rowStatus)) {
-                row.style.display = ''; // Tampilkan baris
+                row.style.display = ''; 
             } else {
-                row.style.display = 'none'; // Sembunyikan baris
+                row.style.display = 'none'; 
             }
         });
     }
@@ -977,13 +997,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Perbarui teks pada elemen span (cek keberadaan elemen sebelum update)
         if (document.getElementById('count-accepted')) document.getElementById('count-accepted').textContent = counts.accepted;
         if (document.getElementById('count-rejected')) document.getElementById('count-rejected').textContent = counts.rejected;
         if (document.getElementById('count-pending')) document.getElementById('count-pending').textContent = counts.pending;
         if (document.getElementById('count-taken')) document.getElementById('count-taken').textContent = counts.taken;
-        // Tambahkan ini jika Anda memiliki elemen untuk need_validation dan success
-        // if (document.getElementById('count-need_validation')) document.getElementById('count-need_validation').textContent = counts.need_validation;
-        // if (document.getElementById('count-success')) document.getElementById('count-success').textContent = counts.success;
     }
 });
