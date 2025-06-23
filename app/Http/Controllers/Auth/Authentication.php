@@ -11,8 +11,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Authentication extends Controller
 {
-    private $baseUrl = 'https://donation-api-auth.vercel.app';
+    private $baseUrl;
 
+    public function __construct()
+    {
+        $this->baseUrl = env('API_AUTH_URL');
+    }
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [

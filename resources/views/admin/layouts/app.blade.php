@@ -15,17 +15,17 @@
 
     <!-- Styles / Scripts -->
     @include('partials.vite')
-    
+
 </head>
 
-<body class="min-h-screen bg-white text-gray-900">
+<body class="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:border-gray-700">
     @include('admin.layouts.navbar')
 
-    <div class="flex bg-white">
+    <div class="flex bg-white dark:bg-gray-900 dark:border-gray-700">
         @include('admin.layouts.sidebar')
 
         <div class="flex-1 lg:ml-64 p-4 pt-20">
-        @yield('content')
+            @yield('content')
         </div>
     </div>
     {{-- flowbite script js --}}
@@ -43,17 +43,17 @@
 
                 // Jika result adalah array langsung
                 if (Array.isArray(result)) {
-                if (result.length === 0) {
-                    document.getElementById('donasi-list').innerHTML = 'Belum ada donasi.';
+                    if (result.length === 0) {
+                        document.getElementById('donasi-list').innerHTML = 'Belum ada donasi.';
+                    } else {
+                        let html = '';
+                        result.forEach(donasi => {
+                            html += `<li>${donasi.nama_donatur} - Rp${donasi.jumlah}</li>`;
+                        });
+                        document.getElementById('donasi-list').innerHTML = html;
+                    }
                 } else {
-                    let html = '';
-                    result.forEach(donasi => {
-                    html += `<li>${donasi.nama_donatur} - Rp${donasi.jumlah}</li>`;
-                    });
-                    document.getElementById('donasi-list').innerHTML = html;
-                }
-                } else {
-                document.getElementById('donasi-list').innerHTML = 'Data donasi tidak valid';
+                    document.getElementById('donasi-list').innerHTML = 'Data donasi tidak valid';
                 }
             })
             .catch(error => {

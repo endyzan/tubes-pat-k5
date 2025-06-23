@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\Http;
 
 class ManajemenDistribusiDonasi extends Controller
 {
-    private $baseUrl = 'https://kuliah2025.my.id/modul.3_distributions/';
-    private $baseUrl2 = 'https://api-mdonasi-core.vercel.app/api/';
+    private $baseUrl;
+    private $baseUrl2;
 
+    public function __construct()
+    {
+        $this->baseUrl = env('API_MODULTIGA_URL');
+        $this->baseUrl2 = env('API_MODULDUA_URL');
+    }
     public function index(Request $request)
     {
         $token = session('user.token');

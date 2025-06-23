@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Http;
 
 class ManajemenPenerimaDonasi extends Controller
 {
-    private $baseUrl = 'https://kuliah2025.my.id/modul.3_distributions/';
+    private $baseUrl;
 
+    public function __construct()
+    {
+        $this->baseUrl = env('API_MODULTIGA_URL');
+    }
     public function index(Request $request)
     {
         $token = session('user.token');
