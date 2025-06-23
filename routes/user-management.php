@@ -14,7 +14,7 @@ use App\Http\Controllers\KegiatanController;
 
 Route::middleware('user-level')->group(function () {
     // Halaman profil
-    Route::view('/profile', 'settings')->name('profile');
+    Route::get('/profile', [Authentication::class, 'showProfile'])->name('profile');
 
     // Update profil
     Route::patch('/profile/update', [Authentication::class, 'updateProfile'])->name('profile.update');

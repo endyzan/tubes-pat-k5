@@ -143,6 +143,63 @@
                 </form>
             </div>
 
+            <!-- Riwayat Token -->
+            <div
+                class="p-6 mt-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <h3 class="mb-4 text-xl font-semibold dark:text-white">Riwayat Token</h3>
+
+                @if ($errors->has('token_history'))
+                    <div class="text-red-500 text-sm mb-4">{{ $errors->first('token_history') }}</div>
+                @endif
+
+                @if ($history->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase">
+                                        Aktivitas</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase">
+                                        Token</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase">
+                                        Waktu</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
+                                @foreach ($history as $item)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                            {{ $item['aktivitas'] }}</td>
+                                        <td class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400 break-all">
+                                            {{ $item['token'] }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                                            {{ \Carbon\Carbon::parse($item['created_at'])->translatedFormat('d F Y H:i') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {{-- Pagination UI --}}
+                    <div class="mt-4 flex justify-center">
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Halaman {{ $history->currentPage() }} dari {{ $history->lastPage() }} | Total:
+                            {{ $history->total() }}
+                        </p>
+                    </div>
+                    <div class="mt-2 flex justify-center">
+                        {{ $history->onEachSide(1)->links('vendor.pagination.tailwind') }}
+                    </div>
+                @else
+                    <p class="text-gray-700 dark:text-gray-300 text-sm">Tidak ada riwayat token.</p>
+                @endif
+            </div>
+
+
         </div>
     </div>
 

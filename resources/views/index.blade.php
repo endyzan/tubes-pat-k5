@@ -7,6 +7,8 @@
     {{-- alert --}}
     @include('partials.autentication-alert')
 
+    @include('partials.login-modal')
+
     <!-- Start Donation Hero Section -->
     @include('partials.beranda.banner')
     <!-- End Donation Hero Section -->

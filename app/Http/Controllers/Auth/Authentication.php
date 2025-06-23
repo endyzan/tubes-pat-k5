@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Authentication extends Controller
 {
@@ -115,7 +116,10 @@ class Authentication extends Controller
 
             $redirectPage = $userData['role'] === 'user' ? 'home' : 'admin-dashboard';
 
-            return redirect()->route($redirectPage)->with('success', 'Login berhasil!');
+            return redirect()->route($redirectPage)->with([
+                'success' => 'Login berhasil.',
+                'login_success' => 'login_success',
+            ]);
         } elseif ($response->status() === 400) {
             return back()->withInput()->withErrors([
                 'login' => $response->json('message'),
@@ -331,6 +335,43 @@ class Authentication extends Controller
             return back()->withErrors([
                 'update_password' => 'Kesalahan server: ' . $e->getMessage(),
             ])->withInput();
+        }
+    }
+
+    public function showProfile(Request $request)
+    {
+        $user = Session::get('user');
+        $token = $user['token'];
+
+        try {
+            $response = Http::withToken($token)
+                ->get($this->baseUrl . "/auth/riwayat-token");
+            if ($response->status() === 200 && $response->json('success') === true) {
+                $data = $response->json('data');
+
+                // Manual pagination
+                $perPage = 5;
+                $currentPage = LengthAwarePaginator::resolveCurrentPage();
+                $offset = ($currentPage - 1) * $perPage;
+                $items = array_slice($data, $offset, $perPage);
+                $paginator = new LengthAwarePaginator($items, count($data), $perPage, $currentPage, [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]);
+
+                return view('settings', [
+                    'history' => $paginator,
+                    'user' => $user,
+                ]);
+            }
+
+            return back()->with([
+                'error' => $response->json('message') ?? 'Gagal mengambil riwayat token.'
+            ]);
+        } catch (\Exception $e) {
+            return back()->with([
+                'error' => 'Kesalahan koneksi: ' . $e->getMessage()
+            ]);
         }
     }
 }
